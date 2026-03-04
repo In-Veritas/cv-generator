@@ -1,0 +1,9 @@
+__pycache__/
+build/
+dist/
+release/
+*.spec
+cv_output.pdf
+cv_test_*.pdf
+icon_preview.pdf
+whale_test.pdf
