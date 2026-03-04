@@ -39,7 +39,10 @@ class CVGenerator(FPDF):
         self.H = 297   # A4 height (mm)
         self.sidebar_w = self.W * self.st["sidebar"]["width_ratio"]
         self.set_auto_page_break(auto=False)
-        self._base_dir = os.path.dirname(os.path.abspath(__file__))
+        if getattr(sys, 'frozen', False):
+            self._base_dir = os.path.dirname(sys.executable)
+        else:
+            self._base_dir = os.path.dirname(os.path.abspath(__file__))
         self._load_icon_fonts()
         self._load_custom_fonts()
 
@@ -700,14 +703,26 @@ class CVGenerator(FPDF):
 
             self.set_font(self._font("body"), "", fs_i)
             self.set_text_color(*self._color("item_date"))
-            self.set_xy(text_x, cy + self._lh(fs_n) + 0.5)
+            issuer_y = cy + self._lh(fs_n) + 0.5
+            self.set_xy(text_x, issuer_y)
             self.cell(col_w - (text_x - cx), self._lh(fs_i), cert.get("issuer", ""))
+
+            date = cert.get("date", "")
+            if date:
+                fs_d = cc.get("date_font_size", 6.5)
+                self.set_font(self._font("body"), "I", fs_d)
+                self.set_text_color(*self._color("item_date"))
+                self.set_xy(text_x, issuer_y + self._lh(fs_i) + 0.3)
+                self.cell(col_w - (text_x - cx), self._lh(fs_d), date)
 
     # ── footer (inside sidebar, bottom) ──────────────────────────────
 
     def _draw_footer(self):
         fc = self.st.get("footer", {})
-        text = fc.get("text", "")
+        name = self.data.get("personal", {}).get("name", "")
+        is_author = name == "Gabriel Vérité"
+
+        text = fc.get("text", "") if is_author else fc.get("text_other", "CV generated with In:Veritas CV Generator")
         if not text:
             return
 
@@ -789,7 +804,11 @@ def main():
     parser.add_argument("-o", "--output", default="cv_output.pdf", help="Output PDF path")
     args = parser.parse_args()
 
-    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # When running as a PyInstaller exe, use the exe's directory, not the temp dir
+    if getattr(sys, 'frozen', False):
+        script_dir = os.path.dirname(sys.executable)
+    else:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
 
     def resolve(p):
         return p if os.path.isabs(p) else os.path.join(script_dir, p)
