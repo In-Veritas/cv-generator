@@ -1,5 +1,7 @@
 # CV Generator
 
+**[Francais](README.fr.md)** | **[Portugues](README.pt.md)** | **[Espanol](README.es.md)**
+
 A Python script that generates a professional two-column PDF CV from JSON configuration files. Designed with recruiter appeal, ATS (Applicant Tracking System) compatibility, and academic admissions optimization in mind. Every single aspect of it is configurable through parameters. Beginners can just change the `cv_data.json` file, and the tech savy should be able to meddle with the `cv_style.json` file or similar or `generate_cv.py` in order to make more refined changes. Nevertheless a tutorial can be found underneath. You can also change the language of the CV using `cv_lang.json` but a manual review of the translated text is recommended.
 
 ## Preview

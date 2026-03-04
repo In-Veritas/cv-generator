@@ -197,7 +197,15 @@ Descriptions follow academic CV best practices for master's applications:
 - Quantified achievements where possible
 - Keywords mirroring target program descriptions
 
-## Footer Whale Icon
+## Footer
+
+The footer at the bottom of the sidebar displays a text line with decorative icons and a clickable link to the repository.
+
+**Dynamic text:** When the CV name is "Gabriel Vérité" (the author), the footer reads *"Générateur de CV développé par mes soins"*. For any other name, it automatically changes to *"CV generated with In:Veritas CV Generator"*. Both texts are configurable via `text` and `text_other` in `cv_style.json`.
+
+**Certification dates:** Each certification entry supports an optional `"date"` field displayed in small italic text below the issuer.
+
+### Whale Icon
 
 The small whale icon next to the footer link is a personal touch — it's my favourite animal. This is purely decorative and has no impact on ATS parsing (it lives in the sidebar, outside the main content area).
 

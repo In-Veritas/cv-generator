@@ -87,8 +87,9 @@
   },
   "certifications": {
     "columns": 2,
-    "row_height": 11,
+    "row_height": 13,
     "col_gap": 2,
+    "date_font_size": 6.5,
     "image_size": 10,
     "image_gap": 2,
     "name_font_size": 9,
@@ -132,6 +133,7 @@
     "image_right": "whale.png",
     "image_size": 3.5,
     "text": "Générateur de CV développé par mes soins",
+    "text_other": "CV generated with In:Veritas CV Generator",
     "link_url": "https://github.com/In-Veritas/cv-generator"
   }
 }

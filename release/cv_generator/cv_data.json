@@ -83,9 +83,9 @@
   ],
 
   "certifications": [
-    {"name": "IT Essentials",             "issuer": "Cisco Networking Academy", "url": "https://www.credly.com/org/cisco/badge/it-essentials",             "image": "badges/it_essentials.png"},
-    {"name": "Networking Basics",         "issuer": "Cisco Networking Academy", "url": "https://www.credly.com/org/cisco/badge/networking-basics",         "image": "badges/networking_basics.png"},
-    {"name": "Cybersecurity Essentials",  "issuer": "Cisco Networking Academy", "url": "https://www.credly.com/org/cisco/badge/cybersecurity-essentials",  "image": "badges/cybersecurity_essentials.png"},
-    {"name": "Data Analytics Essentials", "issuer": "Cisco Networking Academy", "url": "https://www.credly.com/org/cisco/badge/data-analytics-essentials", "image": "badges/data_analytics_essentials.png"}
+    {"name": "IT Essentials",             "issuer": "Cisco Networking Academy", "date": "2021", "url": "https://www.credly.com/org/cisco/badge/it-essentials",             "image": "badges/it_essentials.png"},
+    {"name": "Networking Basics",         "issuer": "Cisco Networking Academy", "date": "2025", "url": "https://www.credly.com/org/cisco/badge/networking-basics",         "image": "badges/networking_basics.png"},
+    {"name": "Cybersecurity Essentials",  "issuer": "Cisco Networking Academy", "date": "2020", "url": "https://www.credly.com/org/cisco/badge/cybersecurity-essentials",  "image": "badges/cybersecurity_essentials.png"},
+    {"name": "Data Analytics Essentials", "issuer": "Cisco Networking Academy", "date": "2026", "url": "https://www.credly.com/org/cisco/badge/data-analytics-essentials", "image": "badges/data_analytics_essentials.png"}
   ]
 }
