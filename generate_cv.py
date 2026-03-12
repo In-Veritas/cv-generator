@@ -90,6 +90,24 @@ class CVGenerator(FPDF):
                 return candidate
         return None
 
+    # ── photo cropping (center-crop to square) ────────────────────────
+
+    def _center_crop_square(self, photo_path):
+        """Crop photo to a square from the center, avoiding distortion."""
+        if not _HAS_PIL:
+            return photo_path
+        img = Image.open(photo_path)
+        w, h = img.size
+        if w == h:
+            return photo_path
+        side = min(w, h)
+        left = (w - side) // 2
+        top = (h - side) // 2
+        img = img.crop((left, top, left + side, top + side))
+        tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
+        img.save(tmp.name)
+        return tmp.name
+
     # ── style helpers ──────────────────────────────────────────────────
 
     def _font(self, key):
@@ -192,7 +210,8 @@ class CVGenerator(FPDF):
             photo_path = self._resolve_photo(photo)
             if photo_path and os.path.exists(photo_path):
                 sz = cfg.get("photo_size", 35)
-                self.image(photo_path, x + (w - sz) / 2, y, sz, sz)
+                cropped = self._center_crop_square(photo_path)
+                self.image(cropped, x + (w - sz) / 2, y, sz, sz)
                 y += sz + self._gap("after_photo")
 
         # ── technical badges (optional) ───────────────────────────────
@@ -604,7 +623,7 @@ class CVGenerator(FPDF):
         gap  = sc.get("badge_gap", 2.5)
         r    = sc.get("badge_radius", 2)
 
-        self.set_font(self._font("body"), "", fs)
+        self.set_font(self._font("body"), "B", fs)
 
         # measure
         badges = []
@@ -642,7 +661,7 @@ class CVGenerator(FPDF):
                     self.rect(bx, by, b["w"], b["h"], "DF")
 
                 self.set_text_color(255, 255, 255)
-                self.set_font(self._font("body"), "", fs)
+                self.set_font(self._font("body"), "B", fs)
                 self.set_xy(bx, by + (b["h"] - fs * 0.35) / 2)
                 self.cell(b["w"], fs * 0.35, b["name"], align="C")
 
@@ -756,17 +775,29 @@ class CVGenerator(FPDF):
             if os.path.exists(candidate):
                 img_path = candidate
 
-        ty = self.H - 12
+        fs_title = fc.get("title_font_size", fs + 0.5)
+        title_color = tuple(fc.get("title_color", self._color("sidebar_name")))
+        text_sub = fc.get("text_sub", "")
+        ty = self.H - (16 if text_sub else 13)
 
-        # line 1: plain text (centred)
-        self.set_font(self._font("body"), "", fs)
-        self.set_text_color(*color)
+        # line 1: main text (centred, slightly larger, white)
+        self.set_font(self._font("body"), "B", fs_title)
+        self.set_text_color(*title_color)
         self.set_xy(pad, ty)
-        self.cell(w, self._lh(fs) + 1, text, align="C")
+        self.cell(w, self._lh(fs_title) + 1, text, align="C")
+        next_y = ty + self._lh(fs_title) + 1.5
 
-        # line 2: icon_left + link + image_right (centred)
+        # line 2: sub-text (centred, italic, softer color)
+        if text_sub:
+            self.set_font(self._font("body"), "I", fs)
+            self.set_text_color(*color)
+            self.set_xy(pad, next_y)
+            self.cell(w, self._lh(fs), text_sub, align="C")
+            next_y += self._lh(fs) + 2
+
+        # line 3: icon_left + link + image_right (centred)
         if link_url:
-            link_y = ty + self._lh(fs) + 2
+            link_y = next_y
             display = link_url.replace("https://", "").replace("http://", "").rstrip("/")
             self.set_font(self._font("body"), "B", fs)
             self.set_text_color(*color)

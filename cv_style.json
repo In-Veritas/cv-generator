@@ -132,7 +132,8 @@
     "icon_font": "fa-solid",
     "image_right": "whale.png",
     "image_size": 3.5,
-    "text": "Générateur de CV développé par mes soins",
+    "text": "Générateur de CV de ma conception",
+    "text_sub": "disponible en open-source",
     "text_other": "CV generated with In:Veritas CV Generator",
     "link_url": "https://github.com/In-Veritas/cv-generator"
   }
