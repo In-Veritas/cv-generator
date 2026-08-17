@@ -2,25 +2,37 @@
   "personal": {
     "name": "Gabriel Vérité",
     "title": "Candidature Master",
-    "photo": "photo.jpg",
+    "photo": "C:/Users/Gabriel/Documents/MonMaster 2026/cv_generator/photo.jpg",
     "objective": "Become an IT Project Manager through diverse training and experience in development, data, and project management.",
     "about": "I have always nurtured a genuine passion for computer science and for creating digital solutions to others' problems, which is also reflected in my free time, where I volunteer for various projects. My goal of becoming an IT Project Manager has led me to seek out diverse training and experiences in different domains in order to build a versatile career and broaden my ideas and perspectives.",
     "contact": {
       "email": "gabriel.lara.verite@gmail.com",
       "phone": "0781575986",
-      "address": ["11, rue Roger Brechan", "69003 Lyon", "France"]
+      "address": [
+        "29, rue du Remblai",
+        "69007 Lyon",
+        "France"
+      ]
     },
     "links": [
-      {"label": "Github",   "icon": "\uf09b", "icon_font": "fa-brands", "url": "https://github.com/In-Veritas"},
-      {"label": "LinkedIn", "icon": "\uf08c", "icon_font": "fa-brands", "url": "https://www.linkedin.com/in/gabriel-v%C3%A9rit%C3%A9-6b793b34b/"}
+      {
+        "label": "Github",
+        "icon": "",
+        "icon_font": "fa-brands",
+        "url": "https://github.com/In-Veritas"
+      },
+      {
+        "label": "LinkedIn",
+        "icon": "",
+        "icon_font": "fa-brands",
+        "url": "https://www.linkedin.com/in/gabriel-v%C3%A9rit%C3%A9-6b793b34b/"
+      }
     ]
   },
-
   "skills": {
     "technical": [],
     "languages": []
   },
-
   "formations": [
     {
       "title": "MIASHS Bachelor's Degree - Psychology Minor",
@@ -41,51 +53,109 @@
       "description": "Technical high school combining general education with specialized training in computer science.\n-Design websites and participate in robotics projects\n-Administer and maintain computer networks"
     }
   ],
-
   "experiences": [
     {
       "title": "Freelance Functional Programming Developer",
-      "subtitle": "Nicolas Abril IT Solutions - Since 2025",
-      "date": "",
+      "subtitle": "Nicolas Abril IT Solutions",
+      "date": "Since 2025",
       "description": "Contribute to the development of a functional programming language and its open-source ecosystem.\n-Develop internal tools and the company website\n-Mentor and train interns, ensuring the quality of their contributions and their technical skill development\n-Lead the integration of new features into the language ecosystem"
     },
     {
       "title": "Intern in Programming Language and Compiler Development",
-      "subtitle": "Nicolas Abril Solutions Informatiques - April 2025 to June 2025",
-      "date": "",
+      "subtitle": "Nicolas Abril Solutions Informatiques",
+      "date": "April 2025 to June 2025",
       "description": "Contribute to the development of a functional language and its compiler.\n-Improve the compiler and enhance the language's standard library\n-Design testing tools and performance benchmarks"
     },
     {
       "title": "Intern in Medical Domain Ontology Design",
-      "subtitle": "Opinaka Data Science - March 2021 to May 2021",
-      "date": "",
+      "subtitle": "Opinaka Data Science",
+      "date": "March 2021 to May 2021",
       "description": "Participate in the construction of a medical ontology by collecting and structuring data.\n-Automate the scraping and cleaning of medical data using Selenium and Python\n-Coordinate a team of interns to design and populate a PostgreSQL database"
     }
   ],
-
   "skills_section": [
     {
       "category": "Languages",
-      "items": ["French (native)", "Portuguese (native)", "English C2", "Spanish B1", "Chinese A2"]
+      "items": [
+        "French (native)",
+        "Portuguese (native)",
+        "English C2",
+        "Spanish B1",
+        "Chinese A2"
+      ]
     },
     {
       "category": "Programming Languages",
-      "items": ["Python", "Java", "Haskell", "C", "SQL", "HTML/CSS", "JavaScript", "Pascal"]
+      "items": [
+        "Python",
+        "Java",
+        "Haskell",
+        "C",
+        "SQL",
+        "HTML/CSS",
+        "JavaScript",
+        "Pascal"
+      ]
     },
     {
-  "category": "Tools & Frameworks",
-  "items": ["Git", "PostgreSQL", "Selenium", "Linux", "Pandas", "NumPy", "Matplotlib", "Jupyter Notebook", "LaTeX"]
+      "category": "Tools & Frameworks",
+      "items": [
+        "Git",
+        "PostgreSQL",
+        "Selenium",
+        "Linux",
+        "Pandas",
+        "NumPy",
+        "Matplotlib",
+        "Jupyter Notebook",
+        "LaTeX"
+      ]
     },
-        {
+    {
       "category": "Soft Skills",
-      "items": ["Goal Setting", "Strategic Planning", "Curiosity", "Motivating Others and Coaching", "Research Skills"]
+      "items": [
+        "Goal Setting",
+        "Strategic Planning",
+        "Curiosity",
+        "Motivating Others and Coaching",
+        "Research Skills"
+      ]
     }
   ],
-
   "certifications": [
-    {"name": "IT Essentials",             "issuer": "Cisco Networking Academy", "date": "2021", "url": "https://www.credly.com/org/cisco/badge/it-essentials",             "image": "badges/it_essentials.png"},
-    {"name": "Networking Basics",         "issuer": "Cisco Networking Academy", "date": "2025", "url": "https://www.credly.com/org/cisco/badge/networking-basics",         "image": "badges/networking_basics.png"},
-    {"name": "Cybersecurity Essentials",  "issuer": "Cisco Networking Academy", "date": "2020", "url": "https://www.credly.com/org/cisco/badge/cybersecurity-essentials",  "image": "badges/cybersecurity_essentials.png"},
-    {"name": "Data Analytics Essentials", "issuer": "Cisco Networking Academy", "date": "2026", "url": "https://www.credly.com/org/cisco/badge/data-analytics-essentials", "image": "badges/data_analytics_essentials.png"}
+    {
+      "name": "IT Essentials",
+      "issuer": "Cisco Networking Academy",
+      "date": "2021",
+      "url": "https://www.credly.com/org/cisco/badge/it-essentials",
+      "image": "badges/it_essentials.png"
+    },
+    {
+      "name": "Networking Basics",
+      "issuer": "Cisco Networking Academy",
+      "date": "2025",
+      "url": "https://www.credly.com/org/cisco/badge/networking-basics",
+      "image": "badges/networking_basics.png"
+    },
+    {
+      "name": "Cybersecurity Essentials",
+      "issuer": "Cisco Networking Academy",
+      "date": "2020",
+      "url": "https://www.credly.com/org/cisco/badge/cybersecurity-essentials",
+      "image": "badges/cybersecurity_essentials.png"
+    },
+    {
+      "name": "Data Analytics Essentials",
+      "issuer": "Cisco Networking Academy",
+      "date": "2026",
+      "url": "https://www.credly.com/org/cisco/badge/data-analytics-essentials",
+      "image": "badges/data_analytics_essentials.png"
+    }
+  ],
+  "section_order": [
+    "experiences",
+    "formations",
+    "certifications",
+    "skills"
   ]
 }
