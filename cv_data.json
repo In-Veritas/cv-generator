@@ -1,10 +1,10 @@
 {
   "personal": {
     "name": "Gabriel Vérité",
-    "title": "Étudiant M1 en Informatique",
+    "title": "Candidature Master",
     "photo": "photo.jpg",
-    "objective": "Devenir Directeur de projets informatiques à travers des formations et expériences variées en développement, données et gestion de projets.",
-    "about": "Au cours de mon parcours, j'ai toujours nourri une véritable passion pour l'informatique, qui se reflète également dans mon temps libre, où je m'investis bénévolement dans divers projets. Mon projet professionnel est de devenir Directeur de projets informatiques, ce qui m'a conduit à rechercher des formations et des expériences dans différents domaines afin de construire un parcours polyvalent et d'élargir mes idées et mes perspectives. C'est dans cette continuité que je souhaite aujourd'hui poursuivre un master en informatique ou en MIAGE afin de renforcer mes compétences et concrétiser cet objectif.",
+    "objective": "Become an IT Project Manager through diverse training and experience in development, data, and project management.",
+    "about": "I have always nurtured a genuine passion for computer science and for creating digital solutions to others' problems, which is also reflected in my free time, where I volunteer for various projects. My goal of becoming an IT Project Manager has led me to seek out diverse training and experiences in different domains in order to build a versatile career and broaden my ideas and perspectives.",
     "contact": {
       "email": "gabriel.lara.verite@gmail.com",
       "phone": "0781575986",
@@ -23,62 +23,62 @@
 
   "formations": [
     {
-      "title": "Licence MIASHS - Option Psychologie",
-      "subtitle": "Université Lyon 2 Lumière",
-      "date": "Juillet 2022 à juin 2025",
-      "description": "Formation pluridisciplinaire en mathématiques, informatique et sciences humaines.\n-Développer des applications en Python et Java pour le traitement de données\n-Concevoir et exploiter des bases de données relationnelles (SQL, PostgreSQL)\n-Appliquer des méthodes statistiques et de modélisation à l'analyse de données\n-Maîtriser les outils de traitement de données (Pandas, NumPy, Matplotlib)"
+      "title": "MIASHS Bachelor's Degree - Psychology Minor",
+      "subtitle": "Lyon 2 Lumière University",
+      "date": "July 2022 to June 2025",
+      "description": "A multidisciplinary program in mathematics, computer science, and the humanities.\n- Develop applications in Python and Java for data processing\n- Design and manage relational databases (SQL, PostgreSQL)\n- Apply statistical and modeling methods to data analysis\n- Master data processing tools (Pandas, NumPy, Matplotlib)"
     },
     {
-      "title": "BTS Services Informatiques aux Organisations - Option Solutions logicielles et applications métiers (SLAM)",
+      "title": "BTS in IT Services for Organizations - Software Solutions and Business Applications (SLAM) Option",
       "subtitle": "CNED",
-      "date": "Septembre 2020 à mai 2021",
-      "description": "Formation en développement logiciel et gestion des systèmes d'information.\n-Programmer des applications métier en Java et concevoir des interfaces utilisateur\n-Administrer des bases de données et modéliser des systèmes d'information (SI)\n-Piloter des projets informatiques selon une méthodologie structurée"
+      "date": "September 2020 to May 2021",
+      "description": "Training in software development and information systems management.\n-Program business applications in Java and design user interfaces\n-Administer databases and model information systems (IS)\n-Manage IT projects using a structured methodology"
     },
     {
-      "title": "Diplome Technicien en Informatique",
-      "subtitle": "TECPUC - Paraná (BRÉSIL)",
-      "date": "Janvier 2013 à décembre 2017",
-      "description": "Lycée technique alliant enseignement général et formation spécialisée en informatique.\n-Concevoir des sites web et participer à des projets de robotique\n-Administrer et maintenir des réseaux informatiques"
+      "title": "Technology Diploma in Computer Science",
+      "subtitle": "TECPUC - Paraná (BRAZIL)",
+      "date": "January 2013 to December 2017",
+      "description": "Technical high school combining general education with specialized training in computer science.\n-Design websites and participate in robotics projects\n-Administer and maintain computer networks"
     }
   ],
 
   "experiences": [
     {
-      "title": "Développeur Freelance en Programmation Fonctionnelle",
-      "subtitle": "Nicolas Abril Solutions Informatiques - Depuis 2025",
+      "title": "Freelance Functional Programming Developer",
+      "subtitle": "Nicolas Abril IT Solutions - Since 2025",
       "date": "",
-      "description": "Contribuer au développement d'un langage de programmation fonctionnel et de son écosystème open-source.\n-Développer des outils internes et le site web de l'entreprise (nicolas.net.br)\n-Encadrer et former des stagiaires, assurant la qualité des contributions et leur montée en compétences techniques\n-Piloter l'intégration de nouvelles fonctionnalités dans l'écosystème du langage"
+      "description": "Contribute to the development of a functional programming language and its open-source ecosystem.\n-Develop internal tools and the company website\n-Mentor and train interns, ensuring the quality of their contributions and their technical skill development\n-Lead the integration of new features into the language ecosystem"
     },
     {
-      "title": "Stagiaire en Développement d'un langage de programmation et d'un compilateur",
-      "subtitle": "Nicolas Abril Solutions Informatiques - Avril 2025 à juin 2025",
+      "title": "Intern in Programming Language and Compiler Development",
+      "subtitle": "Nicolas Abril Solutions Informatiques - April 2025 to June 2025",
       "date": "",
-      "description": "Contribuer au développement d'un langage fonctionnel et de son compilateur.\n-Améliorer le compilateur et enrichir la bibliothèque standard du langage\n-Concevoir des outils de test et des benchmarks de performance"
+      "description": "Contribute to the development of a functional language and its compiler.\n-Improve the compiler and enhance the language's standard library\n-Design testing tools and performance benchmarks"
     },
     {
-      "title": "Stagiaire en Conception d'une Ontologie du Domaine Médical",
-      "subtitle": "Opinaka Data Science - Mars 2021 à mai 2021",
+      "title": "Intern in Medical Domain Ontology Design",
+      "subtitle": "Opinaka Data Science - March 2021 to May 2021",
       "date": "",
-      "description": "Participer à la construction d'une ontologie médicale par la collecte et la structuration de données.\n-Automatiser le scraping et le nettoyage de données médicales avec Selenium et Python\n-Coordonner une équipe de stagiaires pour la conception et l'alimentation d'une base de données PostgreSQL"
+      "description": "Participate in the construction of a medical ontology by collecting and structuring data.\n-Automate the scraping and cleaning of medical data using Selenium and Python\n-Coordinate a team of interns to design and populate a PostgreSQL database"
     }
   ],
 
   "skills_section": [
     {
-      "category": "Langues",
-      "items": ["Français (natif)", "Portugais (natif)", "Anglais C2", "Espagnol B1", "Chinois A2"]
+      "category": "Languages",
+      "items": ["French (native)", "Portuguese (native)", "English C2", "Spanish B1", "Chinese A2"]
     },
     {
-      "category": "Langages de programmation",
+      "category": "Programming Languages",
       "items": ["Python", "Java", "Haskell", "C", "SQL", "HTML/CSS", "JavaScript", "Pascal"]
     },
     {
-      "category": "Outils & Frameworks",
-      "items": ["Git", "PostgreSQL", "Selenium", "Linux", "Pandas", "NumPy", "Matplotlib", "Jupyter Notebook", "LaTeX"]
+  "category": "Tools & Frameworks",
+  "items": ["Git", "PostgreSQL", "Selenium", "Linux", "Pandas", "NumPy", "Matplotlib", "Jupyter Notebook", "LaTeX"]
     },
-    {
+        {
       "category": "Soft Skills",
-      "items": ["Fixer des objectifs", "La planification stratégique", "Curiosité", "Motiver les autres et coacher", "Savoir mener des recherches"]
+      "items": ["Goal Setting", "Strategic Planning", "Curiosity", "Motivating Others and Coaching", "Research Skills"]
     }
   ],
 

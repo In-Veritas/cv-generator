@@ -6,6 +6,8 @@ Un script en Python que genera un CV profesional en PDF de dos columnas a partir
 
 ![Vista previa del CV](cv_preview.png)
 
+> **Nota:** Este mismo CV me consiguio una plaza en mi nuevo master -- lo cual es genial.
+
 ## Para que sirve
 
 - **Candidaturas a master** (MonMaster, expedientes universitarios) -- optimizado para comisiones de admision academica francesas

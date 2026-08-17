@@ -8,6 +8,8 @@ A Python script that generates a professional two-column PDF CV from JSON config
 
 ![CV Preview](cv_preview.png)
 
+> **Note:** This very CV earned me a place in my new master's degree program — which is pretty cool.
+
 ## What It Can Be Used For
 
 - **Master's degree applications** (MonMaster, university dossiers) — optimized for French academic admissions committees
