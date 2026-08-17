@@ -1,0 +1,71 @@
+name: Build releases
+
+# Builds the CV Generator desktop app for Windows, Linux and macOS.
+# Run it manually from the Actions tab (workflow_dispatch) or push a tag like v1.0.
+# PyInstaller cannot cross-compile, so each platform builds on its own runner;
+# this is the only way to produce a real macOS app without owning a Mac.
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: CV-Generator-win64
+            build_args: --onefile --windowed --icon whale.ico
+            binary: dist/CV-Generator.exe
+          - os: ubuntu-latest
+            artifact: CV-Generator-linux-x64
+            build_args: --onefile
+            binary: dist/CV-Generator
+          - os: macos-latest
+            artifact: CV-Generator-macos-arm64
+            build_args: --onefile --windowed
+            binary: dist/CV-Generator.app
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Linux Tk headers
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y python3-tk
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pyinstaller
+
+      - name: Build
+        run: pyinstaller --noconfirm --name CV-Generator ${{ matrix.build_args }} cv_gui.py
+
+      - name: Smoke test (Windows / Linux)
+        if: runner.os != 'macOS'
+        run: |
+          mkdir smoke
+          cp -r fonts badges cv_style.json whale.png smoke/
+          cp ${{ matrix.binary }} smoke/
+          cd smoke
+          ./CV-Generator* --selftest
+        shell: bash
+
+      - name: Assemble release folder
+        run: |
+          mkdir -p package/CV-Generator
+          cp -r ${{ matrix.binary }} package/CV-Generator/
+          cp release_readme.md package/CV-Generator/README.md
+          cp cv_style.json whale.png package/CV-Generator/
+          cp -r fonts package/CV-Generator/fonts
+          cp -r badges package/CV-Generator/badges
+        shell: bash
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: package/
