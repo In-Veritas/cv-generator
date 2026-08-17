@@ -49,7 +49,7 @@ jobs:
         if: runner.os != 'macOS'
         run: |
           mkdir smoke
-          cp -r fonts badges cv_style.json whale.png smoke/
+          cp -r fonts badges cv_style.json whale.png app_icon.png whale.ico smoke/
           cp ${{ matrix.binary }} smoke/
           cd smoke
           ./CV-Generator* --selftest
@@ -60,7 +60,7 @@ jobs:
           mkdir -p package/CV-Generator
           cp -r ${{ matrix.binary }} package/CV-Generator/
           cp release_readme.md package/CV-Generator/README.md
-          cp cv_style.json whale.png package/CV-Generator/
+          cp cv_style.json whale.png app_icon.png whale.ico package/CV-Generator/
           cp -r fonts package/CV-Generator/fonts
           cp -r badges package/CV-Generator/badges
         shell: bash

@@ -475,6 +475,8 @@ class CVGenerator(FPDF):
     #  MAIN CONTENT (right column)
     # ══════════════════════════════════════════════════════════════════
 
+    DEFAULT_SECTION_ORDER = ["formations", "experiences", "skills", "certifications"]
+
     def _draw_main(self):
         cfg = self.st.get("main", {})
         pad = cfg.get("padding", 10)
@@ -482,37 +484,43 @@ class CVGenerator(FPDF):
         w = self.W - self.sidebar_w - 2 * pad
         y = cfg.get("top_margin", 10)
 
-        # ── Formations ─────────────────────────────────────────────────
-        formations = self.data.get("formations", [])
-        if formations:
-            y = self._section_header(x, y, w, self._label("formations", "Formations"))
-            for item in formations:
-                y = self._entry(x, y, w, item)
-                y += self._gap("between_items")
-            y += self._gap("between_sections")
+        # sections are drawn in data["section_order"] when provided
+        order = self.data.get("section_order", self.DEFAULT_SECTION_ORDER)
+        order = [k for k in order if k in self.DEFAULT_SECTION_ORDER] or self.DEFAULT_SECTION_ORDER
 
-        # ── Expériences ────────────────────────────────────────────────
-        experiences = self.data.get("experiences", [])
-        if experiences:
-            y = self._section_header(x, y, w, self._label("experiences", "Expériences"))
-            for item in experiences:
-                y = self._entry(x, y, w, item)
-                y += self._gap("between_items")
-            y += self._gap("between_sections")
+        for key in order:
+            if key == "formations":
+                formations = self.data.get("formations", [])
+                if formations:
+                    y = self._section_header(x, y, w, self._label("formations", "Formations"))
+                    for item in formations:
+                        y = self._entry(x, y, w, item)
+                        y += self._gap("between_items")
+                    y += self._gap("between_sections")
 
-        # ── Compétences (flashy badge-style) ───────────────────────────
-        skills_section = self.data.get("skills_section", [])
-        if skills_section:
-            y = self._section_header(x, y, w, self._label("skills", "Compétences"))
-            for i, cat in enumerate(skills_section):
-                y = self._skill_category(x, y, w, cat, i)
-            y += self._gap("between_sections")
+            elif key == "experiences":
+                experiences = self.data.get("experiences", [])
+                if experiences:
+                    y = self._section_header(x, y, w, self._label("experiences", "Expériences"))
+                    for item in experiences:
+                        y = self._entry(x, y, w, item)
+                        y += self._gap("between_items")
+                    y += self._gap("between_sections")
 
-        # ── Certifications ─────────────────────────────────────────────
-        certifications = self.data.get("certifications", [])
-        if certifications:
-            y = self._section_header(x, y, w, self._label("certifications", "Certifications"))
-            self._certifications_grid(x, y, w, certifications)
+            elif key == "skills":
+                skills_section = self.data.get("skills_section", [])
+                if skills_section:
+                    y = self._section_header(x, y, w, self._label("skills", "Compétences"))
+                    for i, cat in enumerate(skills_section):
+                        y = self._skill_category(x, y, w, cat, i)
+                    y += self._gap("between_sections")
+
+            elif key == "certifications":
+                certifications = self.data.get("certifications", [])
+                if certifications:
+                    y = self._section_header(x, y, w, self._label("certifications", "Certifications"))
+                    y = self._certifications_grid(x, y, w, certifications)
+                    y += self._gap("between_sections")
 
     # ── main: section header ───────────────────────────────────────────
 
@@ -734,6 +742,9 @@ class CVGenerator(FPDF):
                 self.set_xy(text_x, issuer_y + self._lh(fs_i) + 0.3)
                 self.cell(col_w - (text_x - cx), self._lh(fs_d), date)
 
+        rows = (len(certs) + cols - 1) // cols
+        return y + rows * row_h + max(0, rows - 1) * col_gap
+
     # ── footer (inside sidebar, bottom) ──────────────────────────────
 
     def _draw_footer(self):
@@ -741,7 +752,7 @@ class CVGenerator(FPDF):
         name = self.data.get("personal", {}).get("name", "")
         is_author = name == "Gabriel Vérité"
 
-        text = fc.get("text", "") if is_author else fc.get("text_other", "CV generated with In:Veritas CV Generator")
+        text = fc.get("text", "") if is_author else fc.get("text_other", "generated with CV Generator by In Veritas")
         if not text:
             return
 
@@ -777,14 +788,33 @@ class CVGenerator(FPDF):
 
         fs_title = fc.get("title_font_size", fs + 0.5)
         title_color = tuple(fc.get("title_color", self._color("sidebar_name")))
-        text_sub = fc.get("text_sub", "")
+        # the sub-text follows the CV language when the lang file provides it
+        text_sub = self._label("footer_sub", fc.get("text_sub", ""))
         ty = self.H - (16 if text_sub else 13)
 
-        # line 1: main text (centred, slightly larger, white)
+        # line 1: main text (centred, slightly larger, white); on non-author
+        # CVs a portion of it can be a clickable link (e.g. "In Veritas")
         self.set_font(self._font("body"), "B", fs_title)
         self.set_text_color(*title_color)
-        self.set_xy(pad, ty)
-        self.cell(w, self._lh(fs_title) + 1, text, align="C")
+        lh_title = self._lh(fs_title) + 1
+        link_part = "" if is_author else fc.get("text_other_link_text", "In Veritas")
+        part_url = fc.get("text_other_link_url", "https://github.com/In-Veritas")
+        if link_part and part_url and link_part in text:
+            i = text.find(link_part)
+            pieces = [(text[:i], ""), (link_part, part_url),
+                      (text[i + len(link_part):], "")]
+            total_w = sum(self.get_string_width(p) for p, _ in pieces)
+            px2 = pad + (w - total_w) / 2
+            for ptxt, purl in pieces:
+                if not ptxt:
+                    continue
+                pw2 = self.get_string_width(ptxt)
+                self.set_xy(px2, ty)
+                self.cell(pw2, lh_title, ptxt, link=purl)
+                px2 += pw2
+        else:
+            self.set_xy(pad, ty)
+            self.cell(w, lh_title, text, align="C")
         next_y = ty + self._lh(fs_title) + 1.5
 
         # line 2: sub-text (centred, italic, softer color)

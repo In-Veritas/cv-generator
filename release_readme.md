@@ -19,6 +19,7 @@ A desktop application that builds a professional, ATS-friendly, two-column PDF C
 | `fonts/`           | Font Awesome fonts used for the icons on the CV (keep next to the exe) |
 | `badges/`          | Example certification badge images (Cisco, from Credly)               |
 | `whale.png`        | Decorative footer icon                                                |
+| `app_icon.png` / `whale.ico` | Application window and taskbar icons (keep next to the executable) |
 | `README.md`        | This file                                                             |
 
 ### Quick start
@@ -28,11 +29,14 @@ A desktop application that builds a professional, ATS-friendly, two-column PDF C
 3. Pick your language — **Français, English, Español or Português**. The interface *and* the section titles printed on the PDF (Education, Skills…) follow this choice. You can change it later in the **Language** menu.
 4. Fill in the tabs. Every text box shows a grey instruction explaining what to write — it disappears when you click on it.
    - **Personal**: name, headline, photo (use *Browse…* to pick a JPG/PNG — it is automatically cropped to a square), objective, about, contact details, GitHub/LinkedIn links.
-   - **Education / Experience**: fill the form on the right and press *Add*. Select an entry in the list to edit it, then *Update*. Reorder with *Up/Down*. In descriptions, start a line with `- ` to get a colored bullet point.
+   - **Education / Experience**: fill the form on the right and press *Add*. Select an entry in the list to edit it — your changes are saved automatically as you type. Press *Add* again to clear the form and start the next entry. Reorder with *Up/Down*. In descriptions, start a line with `- ` to get a colored bullet point.
    - **Skills**: optional sidebar badges (comma-separated) plus skill categories printed as colored pills in the main area.
    - **Certifications**: name, issuer, date, a link URL, and an optional badge image (see the badge tutorial below).
    - **Style**: pick your colors and sizes, or import a full style JSON.
-5. Press **Generate CV**, choose where to save the PDF, and you are done.
+5. **Section order**: drag the Education / Experience / Skills / Certifications tabs to reorder them — the PDF prints its sections in that exact order. The **Presets** menu offers two ready-made layouts: **Professional** (Experience first — the default) and **Academic** (Education first).
+6. Press **Generate CV**, choose where to save the PDF, and you are done.
+
+> The little whale in the bottom-left corner opens the project's GitHub page.
 
 > **Tip:** use **File → Save CV data (.json)…** regularly so you never lose your work. Load it back with **File → Load CV data (.json)…** — the file is fully compatible with the open-source command-line generator.
 
@@ -108,6 +112,7 @@ Une application de bureau qui crée un CV PDF professionnel en deux colonnes, co
 | `fonts/`           | Polices Font Awesome pour les icônes du CV (à garder à côté de l'exe)  |
 | `badges/`          | Exemples d'images de badges de certification (Cisco, via Credly)       |
 | `whale.png`        | Icône décorative du pied de page                                       |
+| `app_icon.png` / `whale.ico` | Icônes de fenêtre et de barre des tâches (à garder à côté de l'exécutable) |
 | `README.md`        | Ce fichier                                                             |
 
 ### Démarrage rapide
@@ -117,11 +122,14 @@ Une application de bureau qui crée un CV PDF professionnel en deux colonnes, co
 3. Choisissez votre langue — **Français, English, Español ou Português**. L'interface *et* les titres de sections imprimés sur le PDF (Formations, Compétences…) suivent ce choix. Modifiable ensuite dans le menu **Langue**.
 4. Remplissez les onglets. Chaque zone de texte affiche une consigne grise expliquant quoi écrire — elle disparaît au clic.
    - **Personnel** : nom, sous-titre, photo (bouton *Parcourir…*, recadrée automatiquement en carré), objectif, à propos, coordonnées, liens GitHub/LinkedIn.
-   - **Formations / Expériences** : remplissez le formulaire à droite puis *Ajouter*. Sélectionnez une entrée dans la liste pour la modifier, puis *Modifier*. Réordonnez avec *Monter/Descendre*. Dans les descriptions, commencez une ligne par `- ` pour obtenir une puce colorée.
+   - **Formations / Expériences** : remplissez le formulaire à droite puis *Ajouter*. Sélectionnez une entrée dans la liste pour la modifier — vos changements sont enregistrés automatiquement pendant la saisie. Cliquez de nouveau sur *Ajouter* pour vider le formulaire et commencer l'entrée suivante. Réordonnez avec *Monter/Descendre*. Dans les descriptions, commencez une ligne par `- ` pour obtenir une puce colorée.
    - **Compétences** : badges optionnels de la colonne latérale (séparés par des virgules) et catégories affichées en pastilles colorées dans la zone principale.
    - **Certifications** : nom, organisme, date, URL et image de badge optionnelle (voir le tutoriel ci-dessous).
    - **Style** : choisissez couleurs et tailles, ou importez un style JSON complet.
-5. Cliquez sur **Générer le CV**, choisissez où enregistrer le PDF, c'est terminé.
+5. **Ordre des sections** : faites glisser les onglets Formations / Expériences / Compétences / Certifications pour les réordonner — le PDF imprime ses sections dans cet ordre exact. Le menu **Préréglages** propose deux dispositions prêtes à l'emploi : **Professionnel** (Expériences d'abord — par défaut) et **Académique** (Formations d'abord).
+6. Cliquez sur **Générer le CV**, choisissez où enregistrer le PDF, c'est terminé.
+
+> La petite baleine en bas à gauche ouvre la page GitHub du projet.
 
 > **Astuce :** utilisez régulièrement **Fichier → Enregistrer les données (.json)…** pour ne jamais perdre votre travail. Rechargez-les via **Fichier → Charger les données (.json)…** — le fichier est entièrement compatible avec le générateur en ligne de commande open source.
 

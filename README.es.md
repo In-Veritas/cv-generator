@@ -1,6 +1,8 @@
 # CV Generator
 
-Un script en Python que genera un CV profesional en PDF de dos columnas a partir de archivos de configuracion JSON. Disenado para atraer a reclutadores, compatible con ATS (Applicant Tracking System) y optimizado para admisiones academicas. Cada aspecto es configurable mediante parametros. Los principiantes pueden simplemente modificar el archivo `cv_data.json`, mientras que los usuarios avanzados pueden intervenir en `cv_style.json` o directamente en `generate_cv.py` para ajustes mas refinados. Un tutorial esta disponible a continuacion. Tambien puede cambiar el idioma del CV usando `cv_lang.json`, pero se recomienda una revision manual del texto traducido.
+**[English](README.md)** | **[Français](README.fr.md)** | **[Português](README.pt.md)**
+
+Cree un CV PDF profesional de dos columnas, atractivo para reclutadores y compatible con ATS — ya sea con una **aplicacion de escritorio** (rellene un formulario, elija sus colores, pulse Generar) o **manualmente** con Python y archivos de configuracion JSON. Disenado para atraer a reclutadores, compatible con ATS (Applicant Tracking System) y optimizado para admisiones academicas.
 
 ## Vista previa
 
@@ -13,21 +15,53 @@ Un script en Python que genera un CV profesional en PDF de dos columnas a partir
 - **Candidaturas a master** (MonMaster, expedientes universitarios) -- optimizado para comisiones de admision academica francesas
 - **Candidaturas de empleo** -- diseno compatible con ATS con alta tasa de deteccion de palabras clave
 - **Perfiles freelance / profesionales** -- diseno limpio y moderno con enlaces clicables
-- **CVs multilingues** -- alterne entre frances, ingles, espanol y portugues con un solo cambio de configuracion
+- **CVs multilingues** -- alterne entre frances, ingles, espanol y portugues con un solo clic
 
-## Como funciona
+## Dos formas de usarlo
 
-El generador lee tres archivos JSON y produce un PDF A4 de una pagina:
+| | Aplicacion de escritorio (release) | Manual (Python + JSON) |
+| --- | --- | --- |
+| Para | Todos -- sin conocimientos tecnicos | Quienes quieren ajustarlo todo |
+| Requiere | Nada en Windows/Linux; Python en macOS | Python 3.9+ |
+| Controla | Contenido, foto, colores, tamanos, orden de secciones, insignias | Todo eso mas cada parametro de estilo avanzado |
 
-1. **`cv_data.json`** -- Su contenido (quien es usted, que ha hecho)
-2. **`cv_style.json`** -- La apariencia (colores, fuentes, tamanos, espaciados)
-3. **`cv_lang.json`** -- Etiquetas de seccion en el idioma elegido
+## Usar la aplicacion de escritorio (recomendado)
 
-El script usa `fpdf2` para renderizar un diseno de dos columnas: una barra lateral azul marino oscuro (30%) con informacion personal, foto, objetivo y datos de contacto, y un area principal blanca (70%) con formaciones, experiencias, competencias y certificaciones. Todo el texto en el area principal es casi negro sobre blanco para maxima legibilidad ATS.
+### Obtenerla
 
-Las descripciones admiten listas con vinetas: las lineas que comienzan con `-` se renderizan automaticamente con marcadores de color e indentacion.
+Descargue el paquete mas reciente desde la [pagina de Releases](https://github.com/In-Veritas/cv-generator/releases) y descomprimalo:
 
-## Uso
+- **Windows** (`…-win64.zip`): haga doble clic en `CV-Generator.exe`. Si SmartScreen muestra "Windows protegio su PC", pulse *Mas informacion* → *Ejecutar de todas formas* (el exe simplemente no esta firmado digitalmente).
+- **Linux** (`…-linux-x64.tar.gz`): ejecute `chmod +x CV-Generator && ./CV-Generator` desde la carpeta descomprimida.
+- **macOS / cualquier OS** (`…-source.zip`): instale Python 3.9+, luego `pip3 install -r requirements.txt` y `python3 cv_gui.py`.
+
+Mantenga los archivos descomprimidos juntos -- la aplicacion lee `fonts/`, `cv_style.json`, `whale.png` y `app_icon.png` desde su propia carpeta.
+
+### Usarla
+
+1. **Elija un idioma** -- Francais, English, Espanol o Portugues. Define la interfaz y los titulos de seccion impresos en el PDF, y se cambia en cualquier momento desde el menu *Idioma*.
+2. **Rellene las pestanas.** Cada cuadro de texto muestra una instruccion gris explicando que escribir. En las pestanas de listas (Formacion, Experiencia, Competencias, Certificaciones), pulse *Anadir* para crear una entrada; seleccione una entrada para editarla -- los cambios se guardan automaticamente mientras escribe.
+3. **Elija el orden de las secciones.** Arrastre las pestanas de secciones para reordenarlas -- el PDF imprime sus secciones en ese orden exacto. El menu *Preajustes* ofrece **Profesional** (Experiencia primero -- el predeterminado) y **Academico** (Formacion primero).
+4. **De estilo.** La pestana *Estilo* tiene selectores de colores y tamanos, mas un boton *Importar estilo JSON…* que carga un `cv_style.json` completo (vea la seccion manual mas abajo para todo lo que puede contener).
+5. **Anada insignias de certificacion.** La pestana Certificaciones tiene un boton *Ayuda* con una guia paso a paso y una herramienta *Generar insignia…* que recorta cualquier imagen en cuadrado y la ajusta a 300×300 px.
+6. **Genere.** La aplicacion comprueba los campos que los ATS y las herramientas de IA de los reclutadores suelen analizar (nombre, contacto, objetivo, entradas, competencias, fechas) y le avisa si estan vacios -- luego produce el PDF donde usted elija.
+
+Consejos: **Archivo → Guardar datos del CV (.json)** mantiene su trabajo reutilizable (el archivo es totalmente compatible con el generador de linea de comandos de abajo), y la pequena ballena de la esquina inferior izquierda abre mi pagina de GitHub.
+
+El manual completo de la aplicacion -- con solucion de problemas -- se incluye en cada paquete y tambien puede leerse aqui: [release_readme.md](release_readme.md).
+
+### Compilar la aplicacion usted mismo
+
+```bash
+pip install -r requirements.txt pyinstaller
+pyinstaller --onefile --windowed --name CV-Generator --icon whale.ico cv_gui.py
+```
+
+Un workflow de GitHub Actions (`.github/workflows/build-release.yml`) compila automaticamente los paquetes de Windows, Linux y macOS bajo demanda o al empujar una etiqueta `v*`.
+
+## Uso manual (Python + JSON)
+
+Para un control total, use el generador directamente y edite los archivos JSON a mano.
 
 ```bash
 pip install -r requirements.txt
@@ -40,169 +74,145 @@ python generate_cv.py
 python generate_cv.py --data cv_data.json --style cv_style.json --lang cv_lang.json -o output.pdf
 ```
 
-| Opcion    | Defecto         | Descripcion                             |
-| --------- | --------------- | --------------------------------------- |
-| `--data`  | `cv_data.json`  | Ruta al contenido del CV                |
-| `--style` | `cv_style.json` | Ruta a la configuracion visual          |
-| `--lang`  | `cv_lang.json`  | Ruta a las etiquetas de idioma          |
-| `-o`      | `cv_output.pdf` | Ruta del PDF de salida                  |
+| Opcion    | Por defecto     | Descripcion                          |
+| --------- | --------------- | ------------------------------------ |
+| `--data`  | `cv_data.json`  | Ruta al contenido del CV             |
+| `--style` | `cv_style.json` | Ruta a la configuracion visual       |
+| `--lang`  | `cv_lang.json`  | Ruta a las etiquetas de idioma       |
+| `-o`      | `cv_output.pdf` | Ruta del PDF de salida               |
+
+### Los tres archivos JSON
+
+1. **`cv_data.json`** -- Su contenido (quien es usted, que ha hecho). `cv_data_fr.json` es la version francesa de mis propios datos, usable con `--data`.
+2. **`cv_style.json`** -- La apariencia (colores, fuentes, tamanos, espaciados).
+3. **`cv_lang.json`** -- Las etiquetas de seccion y el subtexto del pie de pagina en el idioma elegido.
+
+El generador usa `fpdf2` para producir un diseno de dos columnas: una barra lateral azul marino oscuro (30%) con informacion personal, foto, objetivo y contacto, y un area principal blanca (70%) con las cuatro secciones de contenido. Todo el texto del area principal es casi negro sobre blanco para maxima legibilidad ATS.
 
 ### Cambiar el idioma
 
-Edite `cv_lang.json` y modifique el campo `"lang"`:
+Edite `cv_lang.json` y ponga el campo `"lang"` en `"fr"`, `"en"`, `"es"` o `"pt"`. Esto cambia los titulos de seccion, el titulo del recuadro Objetivo y el subtexto del pie de pagina. El contenido en si (descripciones, titulos) debe traducirse manualmente en `cv_data.json`.
+
+### Cambiar el orden de las secciones
+
+Anada una clave `"section_order"` a `cv_data.json` (se muestra el orden por defecto):
 
 ```json
-{
-  "lang": "es"
-}
+"section_order": ["formations", "experiences", "skills", "certifications"]
 ```
 
-Disponible: `"fr"` (frances), `"en"` (ingles), `"es"` (espanol), `"pt"` (portugues).
+### Descripciones y vinetas
 
-Esto cambia los titulos de seccion (Formacion, Experiencia, Competencias, Certificaciones) y el titulo del recuadro Objetivo. El contenido en si (descripciones, titulos) debe traducirse manualmente en `cv_data.json`.
-
-## Estructura de archivos
-
-| Archivo            | Funcion                                                                        |
-| ------------------ | ------------------------------------------------------------------------------ |
-| `generate_cv.py`   | Script principal del generador (~800 lineas)                                   |
-| `cv_data.json`     | Contenido del CV (infos personales, formaciones, experiencias, competencias, certificaciones) |
-| `cv_style.json`    | Parametros visuales (fuentes, tamanos, colores, espaciados, badges, pie de pagina) |
-| `cv_lang.json`     | Etiquetas de idioma para titulos de seccion                                    |
-| `fonts/`           | Archivos OTF Font Awesome 7 para iconos                                       |
-| `badges/`          | Imagenes de badges de certificacion (Credly)                                   |
-| `requirements.txt` | Dependencias Python (`fpdf2`)                                                  |
-
-## Funcionalidades
-
-### Diseno de dos columnas
-
-El diseno barra lateral (30%) + contenido principal (70%) es uno de los formatos de CV modernos mas populares:
-
-- La barra lateral agrupa la informacion personal/contacto separada del contenido profesional
-- Los reclutadores pueden localizar rapidamente los datos de contacto
-- El area principal ofrece amplio espacio para descripciones de experiencia
-- Los sistemas ATS pueden analizar el area de contenido principal de manera fiable
-
-### Iconos Font Awesome
-
-El generador detecta automaticamente archivos OTF/TTF Font Awesome en el directorio `fonts/`:
-
-- **Enlaces sociales** (GitHub, LinkedIn) -- fuente `fa-brands`
-- **Marcadores de contacto** (email, telefono, direccion) -- fuente `fa-solid`
-- **Enlaces de certificacion** -- icono de enlace clicable junto a cada nombre
-- **Decoraciones del pie de pagina** -- iconos izquierda/derecha configurables
-
-Retorno gracioso a renderizacion solo texto si las fuentes no estan presentes.
-
-### Badges de certificacion
-
-Cada certificacion puede mostrar su imagen de badge oficial (ej. Credly) junto al nombre y emisor. Las imagenes de badge son clicables y enlazan a la pagina de la certificacion.
-
-### Formato de listas con vinetas
-
-Las descripciones admiten un formato hibrido -- una frase de contexto seguida de vinetas:
+Las descripciones admiten un formato hibrido -- una frase de contexto seguida de vinetas. Las lineas que empiezan por `-` se muestran con marcadores de color e indentacion adecuada:
 
 ```json
-"description": "Frase de contexto sobre el puesto.\n- Primer logro o responsabilidad\n- Segundo logro con resultados cuantificados\n- Tercer punto"
+"description": "Frase de contexto sobre el puesto.\n- Primer logro o responsabilidad\n- Segundo logro con resultados cuantificados"
 ```
 
-Las lineas que comienzan con `-` se renderizan con marcadores de color e indentacion apropiada.
+### Insignias de certificacion
 
-### Soporte de foto
+Coloque la imagen de la insignia (ej. descargada de Credly) en `badges/`, luego referenciela en la entrada de certificacion -- la imagen y el pequeno icono de enlace son clicables cuando `url` esta definido:
 
-Soporta formatos JPG, JPEG, PNG, BMP y GIF. Si no se encuentra el nombre exacto del archivo, el generador prueba automaticamente extensiones comunes.
+```json
+{ "name": "IT Essentials", "issuer": "Cisco", "date": "2021",
+  "url": "https://www.credly.com/...", "image": "badges/it_essentials.png" }
+```
 
-### Badges de competencias coloreados
+### Fuentes personalizadas
 
-La seccion de competencias usa badges pilula coloreados agrupados por categoria, cada uno con un color distinto de la familia de azules para coherencia visual.
-
-## Personalizacion
-
-### Cambiar el contenido
-
-Edite `cv_data.json`:
-
-- `personal`: nombre, titulo, foto, objetivo, acerca de, datos de contacto, enlaces sociales
-- `formations`: entradas de formacion con descripciones en lista
-- `experiences`: entradas de experiencia con descripciones en lista
-- `skills_section`: badges de competencias por categoria (idiomas, programacion, herramientas, soft skills)
-- `certifications`: entradas de certificacion con URLs e imagenes de badge opcionales
-
-### Cambiar el estilo
-
-Edite `cv_style.json` para ajustar cualquier parametro visual:
-
-- **Barra lateral**: ratio de ancho, color de fondo, padding, tamano de foto
-- **Fuentes**: familias titulo/cuerpo, fuentes TTF/OTF personalizadas
-- **Tamanos de fuente**: cada elemento de texto tiene su propio tamano configurable
-- **Colores**: cada elemento tiene su propio color RGB
-- **Espaciados**: gaps entre cada seccion, ratio de altura de linea
-- **Badges**: padding, radio, gap, colores por estilo (relleno/contorno/acento)
-- **Seccion de competencias**: tamanos de badges, colores por categoria
-- **Certificaciones**: tamano de imagen, cuadricula, columnas
-- **Recuadro de objetivo**: fondo, borde, color del titulo, color del texto, padding, radio
-- **Pie de pagina**: texto, tamano de fuente, color, iconos, URL de enlace e imagen opcionales
-
-### Usar fuentes personalizadas
-
-Anada archivos TTF/OTF y referencialos en el estilo:
+Anada archivos TTF/OTF y referencielos en el estilo (imprescindible para alfabetos no latinos):
 
 ```json
 "fonts": {
   "heading": "MiFuente",
   "body": "MiFuente",
   "custom": {
-    "MiFuente": {
-      "": "fonts/MiFuente-Regular.ttf",
-      "B": "fonts/MiFuente-Bold.ttf",
-      "I": "fonts/MiFuente-Italic.ttf"
-    }
+    "MiFuente": { "": "fonts/MiFuente-Regular.ttf", "B": "fonts/MiFuente-Bold.ttf", "I": "fonts/MiFuente-Italic.ttf" }
   }
 }
 ```
+
+### Todo lo que controla `cv_style.json`
+
+- **Barra lateral**: ratio de anchura, color de fondo, padding, tamano de foto
+- **Fuentes**: familias de titulo/cuerpo, fuentes TTF/OTF personalizadas
+- **Tamanos de fuente**: cada elemento de texto tiene su propio tamano configurable
+- **Colores**: cada elemento tiene su propio color RGB
+- **Espaciados**: separaciones entre secciones, ratio de altura de linea
+- **Insignias**: padding, radio, separacion, colores por estilo (relleno/contorno/acento)
+- **Seccion de competencias**: tamanos de insignias, colores por categoria
+- **Certificaciones**: tamano de imagen, cuadricula, columnas
+- **Recuadro objetivo**: fondo, borde, color del titulo, color del texto, padding, radio
+- **Pie de pagina**: textos, tamano de fuente, color, iconos, URLs de enlace e imagen
+
+## Estructura de archivos
+
+| Archivo | Proposito |
+| --- | --- |
+| `generate_cv.py` | Generador de PDF (linea de comandos) |
+| `cv_gui.py` | Aplicacion de escritorio (interfaz de formulario sobre el generador) |
+| `cv_data.json` / `cv_data_fr.json` | Contenido del CV (version inglesa / francesa) |
+| `cv_style.json` | Parametros visuales (fuentes, tamanos, colores, espaciados, insignias, pie) |
+| `cv_lang.json` | Etiquetas de idioma para titulos de seccion y pie de pagina |
+| `fonts/` | Archivos OTF de Font Awesome 7 para los iconos |
+| `badges/` | Imagenes de insignias de certificacion (Credly) |
+| `whale.png` / `app_icon.png` / `whale.ico` | Mascota del pie, icono de ventana, icono del exe |
+| `release_readme.md` | Guia de usuario incluida en los paquetes de release |
+| `.github/workflows/build-release.yml` | Compilaciones CI para Windows, Linux y macOS |
+| `requirements.txt` | Dependencias de Python (`fpdf2`, `pillow`) |
 
 ## Investigacion de diseno
 
 ### Paleta de colores
 
-La paleta fue elegida basandose en investigaciones de fuentes del sector de reclutamiento sobre lo que funciona mejor con reclutadores humanos y herramientas de seleccion ATS/IA.
+La paleta se eligio basandose en investigaciones de fuentes del sector de los curriculos sobre lo que mejor funciona tanto con reclutadores humanos como con herramientas de cribado ATS/IA.
 
 **Por que azul marino?**
 
 - El azul es el color de CV n1 recomendado por todas las fuentes -- transmite confianza, fiabilidad y competencia
-- Especialmente adecuado para tech/TI ya que la mayoria de las grandes empresas tecnologicas usan azul en su branding
-- El color azul marino oscuro para titulos (`#003366`) alcanzo una **tasa de deteccion de palabras clave ATS del 98%** en las pruebas
+- Especialmente adecuado para tech/IT ya que la mayoria de las grandes tecnologicas usan branding azul
+- El azul marino oscuro de los titulos (`#003366`) alcanzo una **tasa de deteccion de palabras clave ATS del 98%** en pruebas
 
-| Elemento             | Hex       | Justificacion                                         |
-| -------------------- | --------- | ----------------------------------------------------- |
-| Fondo barra lateral  | `#1B2A4A` | Ratio de contraste con texto blanco: ~12.5:1 (WCAG AAA) |
-| Titulos de seccion   | `#003366` | Tasa de deteccion ATS del 98%                         |
-| Titulos de elementos | `#0476D0` | Recomendado para CVs tech/TI                          |
-| Texto principal      | `#212121` | Contraste con blanco: ~16:1 (WCAG AAA)                |
-| Texto secundario     | `#555555` | Contraste con blanco: ~7.5:1 (WCAG AA)                |
+| Elemento           | Hex       | Justificacion                                       |
+| ------------------ | --------- | --------------------------------------------------- |
+| Fondo barra lateral | `#1B2A4A` | Ratio de contraste con texto blanco: ~12.5:1 (WCAG AAA) |
+| Titulos de seccion | `#003366` | Tasa de deteccion ATS del 98%                       |
+| Titulos de elementos | `#0476D0` | Recomendado para CVs tech/IT                       |
+| Texto principal    | `#212121` | Contraste con blanco: ~16:1 (WCAG AAA)              |
+| Texto secundario   | `#555555` | Contraste con blanco: ~7.5:1 (WCAG AA)              |
 
 ### Reglas de compatibilidad ATS
 
 1. El texto principal es casi negro sobre blanco -- la "Regla 90-10"
 2. Todas las palabras clave criticas estan en el area blanca principal, no en la barra lateral
-3. Ratios de contraste elevados (minimo 4.5:1 segun WCAG AA) en cada combinacion texto-fondo
-4. Paleta coherente de 2 colores (marino + acento azul) mas neutros
+3. Ratios de contraste altos (minimo 4.5:1 segun WCAG AA) en cada par texto-fondo
+4. Paleta cohesiva de 2 colores (marino + acento azul) mas neutros
 5. Fuentes estandar (Helvetica) -- universalmente analizables por ATS
+
+### Formato de las descripciones
+
+Las descripciones siguen las buenas practicas de CV academico para candidaturas a master:
+
+- Formato hibrido: una frase de contexto + vinetas
+- Verbos de accion en infinitivo (convencion francesa)
+- Logros cuantificados siempre que sea posible
+- Palabras clave que reflejan las descripciones de los programas objetivo
 
 ## Pie de pagina
 
-El pie de pagina en la parte inferior de la barra lateral muestra una linea de texto con iconos decorativos y un enlace clicable al repositorio.
+El pie de pagina en la parte inferior de la barra lateral muestra una linea de texto con iconos decorativos y un enlace clicable a este repositorio.
 
-**Texto dinamico:** Cuando el nombre en el CV es "Gabriel Verite" (el autor), el pie de pagina muestra *"Generateur de CV developpe par mes soins"*. Para cualquier otro nombre, cambia automaticamente a *"CV generated with In:Veritas CV Generator"*. Ambos textos son configurables via `text` y `text_other` en `cv_style.json`.
+**Texto dinamico:** Cuando el nombre del CV es "Gabriel Verite" (el autor), el pie muestra *"Generateur de CV de ma conception"*. Para cualquier otro nombre, cambia automaticamente a *"generated with CV Generator by In Veritas"*, donde **In Veritas** es un enlace clicable a mi pagina de GitHub. Configurable via `text`, `text_other`, `text_other_link_text` y `text_other_link_url` en `cv_style.json`.
 
-**Fechas de certificacion:** Cada entrada de certificacion admite un campo opcional `"date"` mostrado en texto cursiva pequeno debajo del emisor.
+**Subtexto localizado:** la linea inferior ("disponible en codigo abierto") sigue el idioma del CV mediante la clave `footer_sub` de `cv_lang.json`.
+
+**Fechas de certificacion:** Cada entrada de certificacion admite un campo opcional `"date"` mostrado en pequeno texto italico bajo el emisor.
 
 ### Icono de ballena
 
-El pequeno icono de ballena junto al enlace del pie de pagina es un toque personal -- es mi animal favorito. Es puramente decorativo y no tiene impacto en el analisis ATS (esta en la barra lateral, fuera del area de contenido principal).
+La pequena ballena junto al enlace del pie es un toque personal -- es mi animal favorito. Es puramente decorativa y no afecta al analisis ATS (esta en la barra lateral, fuera del area de contenido principal). La misma ballena es el icono de ventana de la aplicacion (`app_icon.png`) y, dentro de la aplicacion, una mascota clicable que abre mi pagina de GitHub.
 
-Para eliminarlo, vacia el campo `image_right` en `cv_style.json`:
+Para quitarla del CV, vacie el campo `image_right` en `cv_style.json`:
 
 ```json
 "footer": {

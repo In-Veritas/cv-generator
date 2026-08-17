@@ -17,6 +17,7 @@ import json
 import os
 import subprocess
 import sys
+import webbrowser
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, colorchooser
 
@@ -33,6 +34,13 @@ WINDOW_TITLE = "CV Generator"
 APP_VERSION = "1.0"
 WHALE_TINT = (27, 42, 74)   # dark navy, matches the sidebar
 BADGE_SIZE = 300
+GITHUB_URL = "https://github.com/In-Veritas"
+SECTION_KEYS = ("formations", "experiences", "skills", "certifications")
+PRESETS = {
+    "professional": ["experiences", "formations", "certifications", "skills"],
+    "academic": ["formations", "experiences", "skills", "certifications"],
+}
+DEFAULT_PRESET = "professional"
 
 
 def base_dir():
@@ -46,16 +54,16 @@ def base_dir():
 CV_LABELS = {
     "fr": {"formations": "Formations", "experiences": "Expériences",
            "skills": "Compétences", "certifications": "Certifications",
-           "objective": "Objectif"},
+           "objective": "Objectif", "footer_sub": "disponible en open-source"},
     "en": {"formations": "Education", "experiences": "Experience",
            "skills": "Skills", "certifications": "Certifications",
-           "objective": "Objective"},
+           "objective": "Objective", "footer_sub": "available open-source"},
     "es": {"formations": "Formación", "experiences": "Experiencia",
            "skills": "Competencias", "certifications": "Certificaciones",
-           "objective": "Objetivo"},
+           "objective": "Objetivo", "footer_sub": "disponible en código abierto"},
     "pt": {"formations": "Formação", "experiences": "Experiência",
            "skills": "Competências", "certifications": "Certificações",
-           "objective": "Objetivo"},
+           "objective": "Objetivo", "footer_sub": "disponível em código aberto"},
 }
 
 # ── default style (fallback if cv_style.json is absent next to the app) ─
@@ -109,7 +117,9 @@ EMBEDDED_STYLE = {
                "image_right": "whale.png", "image_size": 3.5,
                "text": "Générateur de CV de ma conception",
                "text_sub": "disponible en open-source",
-               "text_other": "CV generated with In:Veritas CV Generator",
+               "text_other": "generated with CV Generator by In Veritas",
+               "text_other_link_text": "In Veritas",
+               "text_other_link_url": "https://github.com/In-Veritas",
                "link_url": "https://github.com/In-Veritas/cv-generator"},
 }
 
@@ -134,6 +144,58 @@ def open_in_viewer(path):
             subprocess.Popen(["open", path])
         else:
             subprocess.Popen(["xdg-open", path])
+    except Exception:
+        pass
+
+
+def set_app_user_model_id():
+    """Give the process its own Windows taskbar identity.
+
+    Without this, the taskbar may group the app under a stale or generic
+    identity and show a placeholder icon instead of the window's own icon.
+    Must be called before the first window is created.
+    """
+    if sys.platform.startswith("win"):
+        try:
+            import ctypes
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+                "InVeritas.CVGenerator")
+        except Exception:
+            pass
+
+
+def set_window_icon(win):
+    """Use the whale badge as the window icon instead of the default Tk feather.
+
+    On Windows the multi-size whale.ico is applied with iconbitmap, which
+    hands the shell a native HICON — the reliable path for both the title
+    bar and the taskbar button (iconphoto's converted photos made some
+    taskbars fall back to an empty placeholder). Other platforms get the
+    app_icon.png badge through iconphoto.
+    """
+    if sys.platform.startswith("win"):
+        ico = os.path.join(base_dir(), "whale.ico")
+        if os.path.exists(ico):
+            try:
+                win.iconbitmap(default=ico)
+                win._whale_icon = ico
+                return
+            except tk.TclError:
+                pass
+    path = os.path.join(base_dir(), "app_icon.png")
+    if not os.path.exists(path):
+        path = os.path.join(base_dir(), "whale.png")
+    if not os.path.exists(path):
+        return
+    try:
+        if _HAS_PIL:
+            src = Image.open(path).convert("RGBA")
+            imgs = [ImageTk.PhotoImage(src.resize((s, s), Image.LANCZOS), master=win)
+                    for s in (16, 24, 32, 48, 64, 128)]
+        else:
+            imgs = [tk.PhotoImage(file=path, master=win)]
+        win.iconphoto(True, *imgs)
+        win._whale_icon = imgs
     except Exception:
         pass
 
@@ -176,6 +238,8 @@ TR = {
         "menu_import_style": "Import style (.json)...",
         "menu_reset_style": "Reset default style", "menu_exit": "Exit",
         "menu_language": "Language", "menu_help": "Help", "menu_about": "About",
+        "menu_presets": "Presets", "preset_academic": "Academic",
+        "preset_professional": "Professional",
         "lbl_name": "Full name", "lbl_title": "Headline",
         "lbl_photo": "Photo", "lbl_objective": "Objective",
         "lbl_about": "About me", "lbl_email": "Email", "lbl_phone": "Phone",
@@ -270,6 +334,8 @@ TR = {
         "menu_import_style": "Importer un style (.json)...",
         "menu_reset_style": "Rétablir le style par défaut", "menu_exit": "Quitter",
         "menu_language": "Langue", "menu_help": "Aide", "menu_about": "À propos",
+        "menu_presets": "Préréglages", "preset_academic": "Académique",
+        "preset_professional": "Professionnel",
         "lbl_name": "Nom complet", "lbl_title": "Sous-titre",
         "lbl_photo": "Photo", "lbl_objective": "Objectif",
         "lbl_about": "À propos de moi", "lbl_email": "Email", "lbl_phone": "Téléphone",
@@ -364,6 +430,8 @@ TR = {
         "menu_import_style": "Importar estilo (.json)...",
         "menu_reset_style": "Restablecer estilo por defecto", "menu_exit": "Salir",
         "menu_language": "Idioma", "menu_help": "Ayuda", "menu_about": "Acerca de",
+        "menu_presets": "Preajustes", "preset_academic": "Académico",
+        "preset_professional": "Profesional",
         "lbl_name": "Nombre completo", "lbl_title": "Subtítulo",
         "lbl_photo": "Foto", "lbl_objective": "Objetivo",
         "lbl_about": "Sobre mí", "lbl_email": "Email", "lbl_phone": "Teléfono",
@@ -458,6 +526,8 @@ TR = {
         "menu_import_style": "Importar estilo (.json)...",
         "menu_reset_style": "Restaurar estilo padrão", "menu_exit": "Sair",
         "menu_language": "Idioma", "menu_help": "Ajuda", "menu_about": "Sobre",
+        "menu_presets": "Predefinições", "preset_academic": "Acadêmico",
+        "preset_professional": "Profissional",
         "lbl_name": "Nome completo", "lbl_title": "Subtítulo",
         "lbl_photo": "Foto", "lbl_objective": "Objetivo",
         "lbl_about": "Sobre mim", "lbl_email": "Email", "lbl_phone": "Telefone",
@@ -685,11 +755,13 @@ class ListEditor(ttk.Frame):
                 w = PlaceholderEntry(right, placeholder=f["ph"])
                 w.pack(fill="x")
             self.widgets[f["key"]] = w
+            # edits to a selected entry are saved automatically
+            w.bind("<KeyRelease>", self._auto_apply, add="+")
+            w.bind("<FocusOut>", self._auto_apply, add="+")
 
         btns = ttk.Frame(right)
         btns.pack(fill="x", pady=(8, 0))
         ttk.Button(btns, text=t["btn_add"], command=self._add).pack(side="left", padx=(0, 4))
-        ttk.Button(btns, text=t["btn_update"], command=self._update).pack(side="left", padx=(0, 4))
         ttk.Button(btns, text=t["btn_remove"], command=self._remove).pack(side="left")
 
         self.refresh()
@@ -700,6 +772,7 @@ class ListEditor(ttk.Frame):
             filetypes=[(t["dlg_images"], "*.png *.jpg *.jpeg *.bmp *.gif")])
         if path:
             widget.set_value(path)
+            self._auto_apply()
 
     def _harvest_form(self):
         return {f["key"]: self.widgets[f["key"]].get_value() for f in self.fields}
@@ -717,19 +790,34 @@ class ListEditor(ttk.Frame):
         if i is not None:
             self._fill_form(self.items[i])
 
+    def _auto_apply(self, _event=None):
+        """Write the form into the selected entry as the user types."""
+        i = self._selected_index()
+        if i is None:
+            return
+        item = self._harvest_form()
+        if item == self.items[i]:
+            return
+        self.items[i] = item
+        self.listbox.delete(i)
+        self.listbox.insert(i, self.display(item))
+        self.listbox.selection_set(i)
+
     def _add(self):
+        if self._selected_index() is not None:
+            # an entry is selected (edits already saved automatically):
+            # deselect and clear the form so a fresh entry can be typed
+            self.listbox.selection_clear(0, "end")
+            for f in self.fields:
+                self.widgets[f["key"]].set_value("")
+            return
         item = self._harvest_form()
         if not any(item.values()):
             return
         self.items.append(item)
-        self.refresh(select=len(self.items) - 1)
-
-    def _update(self):
-        i = self._selected_index()
-        if i is None:
-            return
-        self.items[i] = self._harvest_form()
-        self.refresh(select=i)
+        self.refresh()
+        for f in self.fields:
+            self.widgets[f["key"]].set_value("")
 
     def _remove(self):
         i = self._selected_index()
@@ -777,11 +865,13 @@ class CVApp(tk.Tk):
         self.lang = lang
         self.model = empty_model()
         self.style_dict = load_default_style()
+        self.section_order = list(PRESETS[DEFAULT_PRESET])
         try:
             ttk.Style(self).theme_use("vista")
         except tk.TclError:
             pass
         self.minsize(860, 640)
+        set_window_icon(self)
         self._build_ui()
 
     @property
@@ -798,18 +888,73 @@ class CVApp(tk.Tk):
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill="both", expand=True, padx=8, pady=(8, 0))
 
+        # Personal is always first and Style always last; the four section
+        # tabs are created in self.section_order and can be dragged around.
+        self._tab_keys = {}
+        builders = {"formations": self._build_education_tab,
+                    "experiences": self._build_experience_tab,
+                    "skills": self._build_skills_tab,
+                    "certifications": self._build_certifications_tab}
         self._build_personal_tab()
-        self._build_education_tab()
-        self._build_experience_tab()
-        self._build_skills_tab()
-        self._build_certifications_tab()
+        for key in self.section_order:
+            self._tab_keys[str(builders[key]())] = key
         self._build_style_tab()
+        self._drag_tab = None
+        self.notebook.bind("<ButtonPress-1>", self._tab_press)
+        self.notebook.bind("<B1-Motion>", self._tab_drag)
 
         bottom = ttk.Frame(self, padding=8)
         bottom.pack(fill="x")
         self._add_whale(bottom)
         gen = ttk.Button(bottom, text="⚙  " + t["btn_generate"], command=self.on_generate)
         gen.pack(side="right")
+
+    # ── tab reordering (drag a section tab to move it) ─────────────────
+
+    def _movable(self, index):
+        return 0 < index < self.notebook.index("end") - 1
+
+    def _tab_press(self, event):
+        try:
+            i = self.notebook.index(f"@{event.x},{event.y}")
+        except tk.TclError:
+            self._drag_tab = None
+            return
+        self._drag_tab = i if self._movable(i) else None
+
+    def _tab_drag(self, event):
+        if self._drag_tab is None:
+            return
+        try:
+            target = self.notebook.index(f"@{event.x},{event.y}")
+        except tk.TclError:
+            return
+        if target == self._drag_tab or not self._movable(target):
+            return
+        self.notebook.insert(target, self.notebook.tabs()[self._drag_tab])
+        self._drag_tab = target
+        self._sync_order_from_tabs()
+
+    def _sync_order_from_tabs(self):
+        self.section_order = [self._tab_keys[w] for w in self.notebook.tabs()
+                              if w in self._tab_keys]
+        self.preset_var.set(self._preset_name())
+
+    def _preset_name(self):
+        for name, order in PRESETS.items():
+            if list(self.section_order) == order:
+                return name
+        return ""
+
+    def apply_preset(self, name):
+        self.section_order = list(PRESETS[name])
+        self._apply_tab_order()
+        self.preset_var.set(name)
+
+    def _apply_tab_order(self):
+        widgets = {key: w for w, key in self._tab_keys.items()}
+        for pos, key in enumerate(self.section_order, start=1):
+            self.notebook.insert(pos, widgets[key])
 
     def _add_whale(self, parent):
         """Dark-blue whale mascot in the bottom-left corner, visible on every tab."""
@@ -821,7 +966,9 @@ class CVApp(tk.Tk):
             tinted = Image.new("RGBA", img.size, WHALE_TINT + (0,))
             tinted.putalpha(img.getchannel("A"))
             self._whale_img = ImageTk.PhotoImage(tinted)
-            ttk.Label(parent, image=self._whale_img).pack(side="left")
+            lbl = ttk.Label(parent, image=self._whale_img, cursor="hand2")
+            lbl.pack(side="left")
+            lbl.bind("<Button-1>", lambda _e: webbrowser.open(GITHUB_URL))
         except Exception:
             pass
 
@@ -838,6 +985,14 @@ class CVApp(tk.Tk):
         m_file.add_separator()
         m_file.add_command(label=t["menu_exit"], command=self.destroy)
         menubar.add_cascade(label=t["menu_file"], menu=m_file)
+
+        self.preset_var = tk.StringVar(self, value=self._preset_name())
+        m_preset = tk.Menu(menubar, tearoff=0)
+        for name in ("professional", "academic"):
+            m_preset.add_radiobutton(label=t["preset_" + name], value=name,
+                                     variable=self.preset_var,
+                                     command=lambda n=name: self.apply_preset(n))
+        menubar.add_cascade(label=t["menu_presets"], menu=m_preset)
 
         m_lang = tk.Menu(menubar, tearoff=0)
         for code in ("fr", "en", "es", "pt"):
@@ -914,6 +1069,7 @@ class CVApp(tk.Tk):
             ],
             display=lambda it: it.get("title", "") or "—")
         self.edu_editor.pack(fill="both", expand=True)
+        return tab
 
     def _build_experience_tab(self):
         t = self.t
@@ -929,6 +1085,7 @@ class CVApp(tk.Tk):
             ],
             display=lambda it: it.get("title", "") or "—")
         self.exp_editor.pack(fill="both", expand=True)
+        return tab
 
     def _build_skills_tab(self):
         t = self.t
@@ -957,6 +1114,7 @@ class CVApp(tk.Tk):
             ],
             display=lambda it: it.get("category", "") or "—")
         self.skill_editor.pack(fill="both", expand=True)
+        return tab
 
     def _build_certifications_tab(self):
         t = self.t
@@ -980,6 +1138,7 @@ class CVApp(tk.Tk):
                    command=self._show_badge_help).pack(side="left")
         ttk.Button(bar, text=t["btn_make_badge"],
                    command=self._generate_badge).pack(side="left", padx=(6, 0))
+        return tab
 
     def _show_badge_help(self):
         t = self.t
@@ -1190,6 +1349,7 @@ class CVApp(tk.Tk):
                                 "items": self._csv(c.get("items", ""))}
                                for c in m["skill_cats"]],
             "certifications": certs,
+            "section_order": list(self.section_order),
         }
 
     def apply_data(self, data):
@@ -1243,6 +1403,11 @@ class CVApp(tk.Tk):
         self.exp_editor.items = m["experiences"]
         self.skill_editor.items = m["skill_cats"]
         self.cert_editor.items = m["certifications"]
+        order = data.get("section_order", [])
+        if sorted(order) == sorted(SECTION_KEYS):
+            self.section_order = list(order)
+            self._apply_tab_order()
+            self.preset_var.set(self._preset_name())
         self.populate()
 
     # ── file actions ───────────────────────────────────────────────────
@@ -1355,6 +1520,7 @@ def choose_language():
     chosen = {"code": None}
     root = tk.Tk()
     root.title(WINDOW_TITLE)
+    set_window_icon(root)
     root.resizable(False, False)
     frame = ttk.Frame(root, padding=24)
     frame.pack()
@@ -1399,6 +1565,7 @@ def selftest():
                          "description": "Did things.\n- Achieved X"}],
         "skills_section": [{"category": "Programming", "items": ["Python", "SQL"]}],
         "certifications": [{"name": "Cert", "issuer": "Issuer", "date": "2024"}],
+        "section_order": PRESETS[DEFAULT_PRESET],
     }
     lang = {"lang": "en", "en": CV_LABELS["en"]}
     gen = CVGenerator(data, load_default_style(), lang)
@@ -1411,6 +1578,7 @@ def main():
     if "--selftest" in sys.argv:
         selftest()
         return
+    set_app_user_model_id()
     code = choose_language()
     if not code:
         return

@@ -134,7 +134,9 @@
     "image_size": 3.5,
     "text": "Générateur de CV de ma conception",
     "text_sub": "disponible en open-source",
-    "text_other": "CV generated with In:Veritas CV Generator",
+    "text_other": "generated with CV Generator by In Veritas",
+    "text_other_link_text": "In Veritas",
+    "text_other_link_url": "https://github.com/In-Veritas",
     "link_url": "https://github.com/In-Veritas/cv-generator"
   }
 }
